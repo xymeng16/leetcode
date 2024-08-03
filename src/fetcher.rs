@@ -102,16 +102,16 @@ pub fn get_problems() -> Option<Problems> {
         h.insert(
             "Accept",
             reqwest::header::HeaderValue::from_static(
-                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             ),
         );
         h.insert(
             "Accept-Encoding",
-            reqwest::header::HeaderValue::from_static("gzip, deflate, br"),
+            reqwest::header::HeaderValue::from_static("gzip, deflate, br, zstd"),
         );
         h.insert(
             "Accept-Language",
-            reqwest::header::HeaderValue::from_static("zh-CN,en-US;q=0.7,en;q=0.3"),
+            reqwest::header::HeaderValue::from_static("en-US,en;q=0.9,es-ES;q=0.8,es;q=0.7,zh-CN;q=0.6,zh;q=0.5"),
         );
         h.insert(
             "Connection",
@@ -120,7 +120,7 @@ pub fn get_problems() -> Option<Problems> {
         h.insert(
             "User-Agent",
             reqwest::header::HeaderValue::from_static(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0",
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
             ),
         );
         h.insert(
@@ -162,13 +162,17 @@ pub fn get_problems() -> Option<Problems> {
         .connection_verbose(true)
         .http2_prior_knowledge()
         .gzip(true)
+        .deflate(true)
+        .zstd(true)
+        .brotli(true)
         .build()
         .unwrap();
     let get = client.get(PROBLEMS_URL).headers(headers);
     // println!("Get: {:?}", get);
-    let reponse = get.send().unwrap();
-    // println!("Response: {:?}", reponse);
-    let result = reponse.json();
+    let response = get.send().unwrap();
+    println!("Response: {:?}", response);
+    // panic!("Response body: {:?}", response.text().unwrap());
+    let result = response.json();
     result.unwrap()
 }
 
