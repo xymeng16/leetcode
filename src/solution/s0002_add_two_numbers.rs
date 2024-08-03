@@ -29,7 +29,7 @@
  * 
  */
 pub struct Solution {}
-use crate::util::linked_list::{ListNode, to_list};
+use crate::util::linked_list::{ListNode};
 
 // problem: https://leetcode.com/problems/add-two-numbers/
 // discuss: https://leetcode.com/problems/add-two-numbers/discuss/?currentPage=1&orderBy=most_votes&query=
@@ -54,22 +54,42 @@ use crate::util::linked_list::{ListNode, to_list};
 // }
 impl Solution {
     pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-        // Some(Box::new(ListNode::new(0)))
-        let carry: i8 = 0;
-        let mut l1_end = false;
-        let mut l2_end = false;
+        let mut head = Box::new(ListNode::new(0));
+        let mut current = &mut head;
+        let mut carry: i32 = 0;
+        let mut l1 = l1;
+        let mut l2 = l2;
+
+
         loop {
-            if l1 == None {
-                l1_end = true;
+            let l1v = match l1 {
+                Some(ref node) => node.val,
+                None => 0,
+            };
+            let l2v = match l2 {
+                Some(ref node) => node.val,
+                None => 0,
+            };
+            let mut sum = l1v + l2v + carry;
+            carry = 0;
+            if sum >= 10 {
+                carry = 1;
+                sum %= 10;
             }
-            if l2 == None {
-                l2_end = true;
+            current.val = sum;
+
+            l1 = l1.unwrap_or(Box::new(ListNode::new(0))).next;
+            l2 = l2.unwrap_or(Box::new(ListNode::new(0))).next;
+            if l1.is_none() && l2.is_none() {
+                if carry == 1 {
+                    current.next = Some(Box::new(ListNode::new(carry)));
+                }
+                break;
             }
-            
-            if !l1_end && !l2_end {
-                
-            }
+            current.next = Some(Box::new(ListNode::new(0)));
+            current = current.next.as_mut().unwrap();
         }
+        Some(head)
     }
 }
 
