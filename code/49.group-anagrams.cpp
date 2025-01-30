@@ -21,22 +21,39 @@ public:
       // }
       vector<vector<string>> result;
 
-      auto sorted_strs = strs;
-      for (auto &str: sorted_strs) {
-        std::sort(str.begin(), str.end());
-      }
+      // auto sorted_strs = strs;
+      // for (auto &str: sorted_strs) {
+      //   std::sort(str.begin(), str.end());
+      // }
+      //
+      // unordered_map<string, unordered_set<int>> hashmap;
+      // for (int i = 0; i < sorted_strs.size(); i++) {
+      //   hashmap[sorted_strs[i]].insert(i);
+      // }
+      // for (const auto& [k, v]: hashmap) {
+      //   vector<string> t;
+      //   for (const auto& i: v) {
+      //     t.push_back(strs[i]);
+      //   }
+      //   result.push_back(t);
+      // }
+      //
+      unordered_map<string, vector<string>> map;
 
-      unordered_map<string, unordered_set<int>> hashmap;
-      for (int i = 0; i < sorted_strs.size(); i++) {
-        hashmap[sorted_strs[i]].insert(i);
-      }
-      for (const auto& [k, v]: hashmap) {
-        vector<string> t;
-        for (const auto& i: v) {
-          t.push_back(strs[i]);
+        for (auto str: strs) {
+            auto sorted_str = str;
+            std::sort(sorted_str.begin(), sorted_str.end());
+            auto search = map.find(sorted_str);
+            if (search == map.end()) {
+                map[sorted_str] = {str};
+            } else {
+                map[sorted_str].push_back(str);
+            }
         }
-        result.push_back(t);
-      }
+
+        for (const auto& [k, v]: map) {
+            result.push_back(v);
+        }
 
       return result;
     }
