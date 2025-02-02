@@ -2,18 +2,31 @@
 using namespace std;
 // start_marker
 class MinStack {
+private:
+  std::list<int> _list;
+  std::list<int> _min;
+
 public:
   MinStack() {}
 
-  void push(int val) {}
+  void push(int val) {
+    if (this->_list.empty()) {
+      this->_min.push_front(val);
+    } else {
+      const int &last_min = this->_min.front();
+      this->_min.push_front(std::min(last_min, val));
+    }
+    this->_list.push_front(val);
+  }
 
-  void pop() {}
+  void pop() {
+    this->_list.pop_front();
+    this->_min.pop_front();
+  }
 
-  int top() {}
+  int top() { return this->_list.front(); }
 
-  int getMin() {}
-
-private:
+  int getMin() { return this->_min.front(); }
 };
 
 /**
